@@ -1,9 +1,9 @@
 // Set up global variables.
-var scene, camera, renderer, model;
+var scene, camera, renderer, json;
 var models = [];
 var lights = [];
 
-getModel();
+getScene();
 getInfo();
 init();
 animate();
@@ -23,7 +23,7 @@ function init() {
 
   // Create a camera and add it to the scene.
   camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
-  camera.position.set(0,-.4,6);
+  camera.position.set(0,0.4,-6);
   scene.add(camera);
 
   // Event listeners
@@ -37,7 +37,7 @@ function init() {
   });
 
   //load model and lights
-  loadModel(model);
+  loadScene(JScene);
   loadLight(-100,100,200);
   loadLight(100,-200,-100);
 
@@ -53,17 +53,10 @@ function animate() {
   controls.update();
 }
 
-
-function loadModel(model){
-  // Load in the mesh and add it to the scene.
-  var loader = new THREE.JSONLoader();
-  loader.load( "models/" + model + ".json", function(geometry,mat){
-    //var material = new THREE.MeshLambertMaterial({color: 0xffffff});
-    var material = new THREE.MeshFaceMaterial( mat );
-    mesh = new THREE.Mesh(geometry, material);
-    //mesh.rotateX(5);
-    models.push(mesh);
-    scene.add(mesh);
+function loadScene(JScene){
+  var loader = new THREE.ObjectLoader();
+  loader.load("models/" + JScene + ".json",function ( obj ) {
+       scene.add( obj );
   });
 }
 
@@ -83,12 +76,12 @@ function loadLight(x,y,z){
   scene.add(light);
 }
 
-function getModel(){
-  model = getVar("model");
-  if(!model){
-    model = "monkey.json";
+function getScene(){
+  JScene = getVar("json");
+  if(!JScene){
+    JScene = "defaultScene.json";
   }
-  model = model.split(".")[0];
+  JScene = JScene.split(".")[0];
 }
 
 function getInfo(){
