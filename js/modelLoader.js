@@ -26,7 +26,8 @@ function init() {
   camera.position.set(0,-.4,6);
   scene.add(camera);
 
-  // Event listener for resizing.
+  // Event listeners
+  document.body.addEventListener("mousedown", fullscreen, false);
   window.addEventListener('resize', function() {
     var WIDTH = window.innerWidth,
         HEIGHT = window.innerHeight;
@@ -56,8 +57,9 @@ function animate() {
 function loadModel(model){
   // Load in the mesh and add it to the scene.
   var loader = new THREE.JSONLoader();
-  loader.load( "models/" + model + ".json", function(geometry){
-    var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+  loader.load( "models/" + model + ".json", function(geometry,mat){
+    //var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+    var material = new THREE.MeshFaceMaterial( mat );
     mesh = new THREE.Mesh(geometry, material);
     //mesh.rotateX(5);
     models.push(mesh);
@@ -100,4 +102,14 @@ function getInfo(){
       $(this).fadeTo("slow",.2);
     });
   }
+}
+
+function fullscreen(){
+  var element = document.body;
+  element.requestFullscreen = element.requestFullscreen || 
+      element.mozRequestFullscreen || 
+      element.mozRequestFullScreen || 
+      element.webkitRequestFullscreen;
+
+  element.requestFullscreen();
 }
