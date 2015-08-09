@@ -42,6 +42,7 @@
       // Create a renderer
       renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
       renderer.setSize(WIDTH, HEIGHT);
+      renderer.setClearColor( 0x222222 );
       document.body.appendChild(renderer.domElement);
 
       // Create a camera and add it to the scene.
@@ -60,8 +61,8 @@
     
       //load model and lights
       loadModel(model);
-      loadLight(100,-200,-100);
       loadLight(-100,200,100);
+      loadLight(100,-200,-100);
 
       // Add Controls.
       controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -80,7 +81,7 @@
       // Load in the mesh and add it to the scene.
       var loader = new THREE.JSONLoader();
       loader.load( "models/" + model + ".json", function(geometry){
-        var material = new THREE.MeshLambertMaterial({color: 0x55B663});
+        var material = new THREE.MeshLambertMaterial({color: 0xffffff});
         mesh = new THREE.Mesh(geometry, material);
         mesh.rotateX(5);
         models.push(mesh);
