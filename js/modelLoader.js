@@ -1,13 +1,10 @@
 // Set up global variables.
-var scene, camera, renderer;
+var scene, camera, renderer, model;
 var models = [];
 var lights = [];
-var model = getVar("model");
-if(!model){
-  model = "monkey.json";
-}
-model = model.split(".")[0];
 
+getModel();
+getInfo();
 init();
 animate();
 
@@ -84,3 +81,23 @@ function loadLight(x,y,z){
   scene.add(light);
 }
 
+function getModel(){
+  model = getVar("model");
+  if(!model){
+    model = "monkey.json";
+  }
+  model = model.split(".")[0];
+}
+
+function getInfo(){
+  var info = getVar("info");
+  if(info){
+    $("#infoBox").html(info);
+    $("#infoBox").fadeTo("slow",.2);
+    $("#infoBox").hover(function(){
+      $(this).fadeTo("slow",.5);
+    },function(){
+      $(this).fadeTo("slow",.2);
+    });
+  }
+}
