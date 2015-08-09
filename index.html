@@ -47,7 +47,7 @@
 
       // Create a camera and add it to the scene.
       camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
-      camera.position.set(0,6,0);
+      camera.position.set(0,-.4,6);
       scene.add(camera);
 
       // Event listener for resizing.
@@ -61,7 +61,7 @@
     
       //load model and lights
       loadModel(model);
-      loadLight(-100,200,100);
+      loadLight(-100,100,200);
       loadLight(100,-200,-100);
 
       // Add Controls.
@@ -83,7 +83,7 @@
       loader.load( "models/" + model + ".json", function(geometry){
         var material = new THREE.MeshLambertMaterial({color: 0xffffff});
         mesh = new THREE.Mesh(geometry, material);
-        mesh.rotateX(5);
+        //mesh.rotateX(5);
         models.push(mesh);
         scene.add(mesh);
       });
