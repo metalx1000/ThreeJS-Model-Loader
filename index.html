@@ -9,104 +9,30 @@
       overflow: hidden; 
       background-color: #000; 
     }
+
+    #infoBox {
+      position: absolute;
+      top: 0px; width: 50%;
+      opacity: 0.2;
+      color: #ffffff;
+      padding: 5px;
+      margin:5px;
+      font-family: Monospace;
+      font-size: 15px;
+      text-align: center;
+      background-color: #000000;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <script src="js/three.min.js"></script>
-  <script src="js/OrbitControls.js"></script>
-  <script src="js/Detector.js"></script>
+  <div id="infoBox">This is a testThis is a testThis is a testThis is a testThis is a testThis is a testThis is a testThis is a testThis is a test</div>
+  <script src="lib/three.min.js"></script>
+  <script src="lib/OrbitControls.js"></script>
+  <script src="lib/Detector.js"></script>
 
-  <script>
-
-    // Set up global variables.
-    var scene, camera, renderer;
-    var models = [];
-    var lights = [];
-    var model = getVar("model");
-    if(!model){
-      model = "monkey.json";
-    }
-    model = model.split(".")[0];
-
-    init();
-    animate();
-
-    function init() {
-
-      // Create the scene and set the scene size.
-      scene = new THREE.Scene();
-      var WIDTH = window.innerWidth,
-          HEIGHT = window.innerHeight;
-
-      // Create a renderer
-      renderer = Detector.webgl ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
-      renderer.setSize(WIDTH, HEIGHT);
-      renderer.setClearColor( 0x222222 );
-      document.body.appendChild(renderer.domElement);
-
-      // Create a camera and add it to the scene.
-      camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
-      camera.position.set(0,-.4,6);
-      scene.add(camera);
-
-      // Event listener for resizing.
-      window.addEventListener('resize', function() {
-        var WIDTH = window.innerWidth,
-            HEIGHT = window.innerHeight;
-        renderer.setSize(WIDTH, HEIGHT);
-        camera.aspect = WIDTH / HEIGHT;
-        camera.updateProjectionMatrix();
-      });
-    
-      //load model and lights
-      loadModel(model);
-      loadLight(-100,100,200);
-      loadLight(100,-200,-100);
-
-      // Add Controls.
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    }
-
-
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-      controls.update();
-    }
-
-
-    function loadModel(model){
-      // Load in the mesh and add it to the scene.
-      var loader = new THREE.JSONLoader();
-      loader.load( "models/" + model + ".json", function(geometry){
-        var material = new THREE.MeshLambertMaterial({color: 0xffffff});
-        mesh = new THREE.Mesh(geometry, material);
-        //mesh.rotateX(5);
-        models.push(mesh);
-        scene.add(mesh);
-      });
-    }
-
-    function getVar(name) {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-          results = regex.exec(location.search);
-      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-   function loadLight(x,y,z){ 
-      // Create a light, set its position, and add it to the scene.
-      var light = new THREE.PointLight(0xffffff);
-      //var light = new THREE.AmbientLight(0x404040);
-      light.position.set(x,y,z);
-      lights.push(light);
-      scene.add(light);
-    }
-
-
-  </script>
+  <script src="js/modelLoader.js"></script>
 
 </body>
 </html>
