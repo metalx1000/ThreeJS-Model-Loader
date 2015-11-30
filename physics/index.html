@@ -73,6 +73,10 @@
           // We must add the contact materials to the world
           world.addContactMaterial(physicsContactMaterial);
 
+          //add BOX physics to all imported meshes
+          dae.children.forEach(function(obj){
+            addBoxPhy(obj);
+          });
           // Create a ground plane
           //addGround();
       }
@@ -216,19 +220,18 @@
       function addBoxPhy(obj){
         var mesh = obj.children[0];
         if(mesh.type == "Mesh"){
-/*
-          var x=mesh.geometry.boundingBox.size().x/4;
-          var y=mesh.geometry.boundingBox.size().y/4;
-          var z=mesh.geometry.boundingBox.size().z/4;
-          var v=mesh.geometry.boundingBox.size(); 
-*/
-          
+          var posX = obj.position.x;
+          var posY = obj.position.y;
+          var posZ = obj.position.z;
           var halfExtents = new CANNON.Vec3(1,1,1);
           var boxShape = new CANNON.Box(halfExtents);
           var boxBody = new CANNON.Body({ mass: 5 });
+          obj.position.set(0,0,0);
           boxBody.addShape(boxShape);
           world.add(boxBody);
-          boxBody.position.copy(mesh.position); 
+          boxBody.position.x= posX; 
+          boxBody.position.y= posY; 
+          boxBody.position.z= posZ; 
           boxMeshes.push(mesh);
           boxes.push(boxBody);
         }
