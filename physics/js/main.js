@@ -2,6 +2,7 @@
 
 Physijs.scripts.worker = 'libs/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
+if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var initScene, render, createShape,
   renderer, scene, light, ground, ground_material, camera, dae;
@@ -38,7 +39,7 @@ initScene = function() {
   camera.position.set(60, 50, 60);
   camera.lookAt(scene.position);
   scene.add(camera);
-
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
   // Light
   light = new THREE.DirectionalLight(0xFFFFFF);
   light.position.set(20, 40, -15);
@@ -129,8 +130,13 @@ initScene = function() {
     dae = collada.scene;
     dae.children.forEach(function(obj) {
       var mesh = obj.children[0];
-      if (mesh.type == "Mesh") {
+      if (mesh.type == "Mesh" && obj.name != "Grid") {
         var item = new Physijs.ConvexMesh(mesh.geometry, mesh.material);
+        item.position.copy(obj.position);
+        scene.add(item);
+        monkies.push(item);
+      }else if(mesh.type == "Mesh" && obj.name == "Grid"){
+        var item = new Physijs.ConvexMesh(mesh.geometry, mesh.material,0);
         item.position.copy(obj.position);
         scene.add(item);
         monkies.push(item);
