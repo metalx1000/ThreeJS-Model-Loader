@@ -4,7 +4,7 @@ Physijs.scripts.worker = 'libs/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-var initScene, render, createShape,
+var initScene, render, createShape, player,
   renderer, scene, light, ground, ground_material, camera, dae;
 var monkies = [];
 
@@ -39,7 +39,7 @@ initScene = function() {
   camera.position.set(60, 50, 60);
   camera.lookAt(scene.position);
   scene.add(camera);
-  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  //var controls = new THREE.OrbitControls(camera, renderer.domElement);
   // Light
   light = new THREE.DirectionalLight(0xFFFFFF);
   light.position.set(20, 40, -15);
@@ -130,18 +130,23 @@ initScene = function() {
     dae = collada.scene;
     dae.children.forEach(function(obj) {
       var mesh = obj.children[0];
-      if (mesh.type == "Mesh" && obj.name != "Grid") {
+      if(mesh.type == "Mesh" && obj.name == "Player"){
+        console.log("Loading Player");
+        player = new Physijs.BoxMesh(mesh.geometry, mesh.material);
+        player.position.copy(obj.position);
+        scene.add(player);
+      }else if(mesh.type == "Mesh" && obj.name == "Plane"){
+        console.log("Plane Found");
+        var item = new Physijs.ConcaveMesh(mesh.geometry, mesh.material,0);
+        item.position.copy(obj.position);
+        scene.add(item);
+        monkies.push(item);
+      }else if (mesh.type == "Mesh") {
         var item = new Physijs.ConvexMesh(mesh.geometry, mesh.material);
         item.position.copy(obj.position);
         scene.add(item);
         monkies.push(item);
-      }else if(mesh.type == "Mesh" && obj.name == "Grid"){
-        var item = new Physijs.ConvexMesh(mesh.geometry, mesh.material,0);
-        item.position.copy(obj.position);
-        scene.add(item);
-        monkies.push(item);
-      }
-      //scene.add( dae );
+      }       //scene.add( dae );
     });
   });
 
@@ -149,6 +154,7 @@ initScene = function() {
 
 render = function() {
   requestAnimationFrame(render);
+  scene.simulate();
   renderer.render(scene, camera);
 };
 
@@ -252,3 +258,15 @@ createShape = (function() {
 })();
 
 window.onload = initScene;
+document.addEventListener('keydown', function( ev ) {
+  switch ( ev.keyCode ) {
+    case 38: // forward
+      player.applyForce(player.matrix.multiplyVector3(new THREE.Vector3(1,0,0)));
+      //player.applyCentralImpulse(player.matrix.multiplyVector3(new THREE.Vector3(1,0,0)));
+      //player.setLinearVelocity(player.matrix.multiplyVector3(new THREE.Vector3(1,0,0)));
+      break;    
+    case 37: // left
+      player.setAngularVelocity(new THREE.Vector3(0,10,0));
+      break;
+  }
+});
