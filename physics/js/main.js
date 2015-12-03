@@ -261,12 +261,14 @@ window.onload = initScene;
 document.addEventListener('keydown', function( ev ) {
   switch ( ev.keyCode ) {
     case 38: // forward
-      player.applyForce(player.matrix.multiplyVector3(new THREE.Vector3(1,0,0)));
-      //player.applyCentralImpulse(player.matrix.multiplyVector3(new THREE.Vector3(1,0,0)));
+      player.applyCentralImpulse(player.matrix.multiplyVector3(new THREE.Vector3(10,0,0)),player.matrix.multiplyVector3(new THREE.Vector3(10,0,0)));
       //player.setLinearVelocity(player.matrix.multiplyVector3(new THREE.Vector3(1,0,0)));
       break;    
     case 37: // left
       player.setAngularVelocity(new THREE.Vector3(0,10,0));
+      break;
+    case 39: // right
+      player.setAngularVelocity(new THREE.Vector3(0,-10,0));
       break;
   }
 });
