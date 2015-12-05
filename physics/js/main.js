@@ -122,7 +122,7 @@ initScene = function() {
   requestAnimationFrame(render);
   scene.simulate();
 
-  createShape();
+  //createShape();
 
   var loader = new THREE.ColladaLoader();
   loader.options.convertUpAxis = true;
@@ -134,7 +134,10 @@ initScene = function() {
         console.log("Loading Player");
         player = new Physijs.BoxMesh(mesh.geometry, mesh.material);
         player.position.copy(obj.position);
+        player.velocity = new THREE.Vector3();
+        player.setLinearVelocity(player.velocity);
         player.castShadow = true;
+        player.speed = 10;
         scene.add(player);
       }else if(mesh.type == "Mesh" && obj.name == "Plane"){
         console.log("Plane Found");
@@ -165,28 +168,19 @@ window.onload = initScene;
 document.addEventListener('keydown', function( ev ) {
   switch ( ev.keyCode ) {
     case 38: // forward
-      var force = new THREE.Vector3(10,0, 0);
-      var newForce = player.matrix.multiplyVector3(force);
-      var matrix = new THREE.Matrix4();
-      //var v = new THREE.Vector3(10,0,0);
       var v = player.getWorldDirection();
-      console.log(v);
-      //v.z = 10;
-      //console.log(v);
-      player.applyCentralImpulse(newForce);
-      //player.setLinearVelocity(v.applyProjection(matrix));
-      //player.applyForce(force,player.getWorldDirection);
+      v.x *= player.speed;
+      v.z *= player.speed;
+      player.setLinearVelocity(v);
       break;    
     case 40: // back
-      var matrix = new THREE.Matrix4();
-      var v = new THREE.Vector3(-10,0,0);
-      player.applyCentralImpulse(v.applyMatrix4(matrix));
-      //player.applyCentralImpulse(v.applyProjection(matrix));
-      //player.setLinearVelocity(player.matrix.multiplyVector3(new THREE.Vector3(-1,0,0)));
+      var v = player.getWorldDirection();
+      v.x *= -player.speed;
+      v.z *= -player.speed;
+      player.setLinearVelocity(v);
       break;    
     case 37: // left
       player.setAngularVelocity(new THREE.Vector3(0,10,0));
-      console.log(player.getWorldDirection());
       break;
     case 39: // right
       player.setAngularVelocity(new THREE.Vector3(0,-10,0));
