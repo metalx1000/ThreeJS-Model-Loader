@@ -166,6 +166,7 @@ render = function() {
 
 window.onload = initScene;
 document.addEventListener('keydown', function( ev ) {
+    //console.log(ev.keyCode); //get keycode in console
   switch ( ev.keyCode ) {
     case 38: // forward
       var v = player.getWorldDirection();
@@ -185,5 +186,12 @@ document.addEventListener('keydown', function( ev ) {
     case 39: // right
       player.setAngularVelocity(new THREE.Vector3(0,-10,0));
       break;
+    case 32: // Spacebar to flip player back over
+      player.lookAt(player.getWorldRotation());
+      player.__dirtyRotation = true;
+      break;
+    case 90:
+      var x=new THREE.Vector3(50,0,0);
+      player.setAngularVelocity(x);
   }
 });
