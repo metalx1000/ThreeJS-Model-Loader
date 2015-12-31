@@ -119,7 +119,6 @@ initScene = function() {
   bumper.castShadow = true;
   scene.add(bumper);
 
-  requestAnimationFrame(render);
   scene.simulate();
 
   //createShape();
@@ -160,6 +159,8 @@ initScene = function() {
     });
   });
 
+
+  requestAnimationFrame(render);
 };
 
 render = function() {
@@ -175,6 +176,7 @@ function move(){
     var v = player.getWorldDirection();
     v.x *= player.speed;
     v.z *= player.speed;
+    v.y = player.getLinearVelocity().y; //keeps gravity working
     player.setLinearVelocity(v);    
   }
 
@@ -182,6 +184,7 @@ function move(){
     var v = player.getWorldDirection();
     v.x *= -player.speed;
     v.z *= -player.speed;
+    v.y = player.getLinearVelocity().y; //keeps gravity working
     player.setLinearVelocity(v);
   }
 
