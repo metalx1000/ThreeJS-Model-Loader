@@ -138,6 +138,10 @@ initScene = function() {
         player.setLinearVelocity(player.velocity);
         player.castShadow = true;
         player.speed = 10;
+        player.forward = false;
+        player.back = false;
+        player.left = false;
+        player.right = false;
         scene.add(player);
       }else if(mesh.type == "Mesh" && obj.name == "Plane"){
         console.log("Plane Found");
@@ -162,29 +166,49 @@ render = function() {
   requestAnimationFrame(render);
   scene.simulate();
   renderer.render(scene, camera);
+  move();
 };
+
+
+function move(){
+  if(player.forward){
+    var v = player.getWorldDirection();
+    v.x *= player.speed;
+    v.z *= player.speed;
+    player.setLinearVelocity(v);    
+  }
+
+  if(player.back){
+    var v = player.getWorldDirection();
+    v.x *= -player.speed;
+    v.z *= -player.speed;
+    player.setLinearVelocity(v);
+  }
+
+  if(player.left){
+    player.setAngularVelocity(new THREE.Vector3(0,5,0));
+  }
+
+  if(player.right){
+    player.setAngularVelocity(new THREE.Vector3(0,-5,0));
+  }
+}
 
 window.onload = initScene;
 document.addEventListener('keydown', function( ev ) {
     //console.log(ev.keyCode); //get keycode in console
   switch ( ev.keyCode ) {
     case 38: // forward
-      var v = player.getWorldDirection();
-      v.x *= player.speed;
-      v.z *= player.speed;
-      player.setLinearVelocity(v);
+      player.forward = true;
       break;    
     case 40: // back
-      var v = player.getWorldDirection();
-      v.x *= -player.speed;
-      v.z *= -player.speed;
-      player.setLinearVelocity(v);
+      player.back = true;
       break;    
     case 37: // left
-      player.setAngularVelocity(new THREE.Vector3(0,10,0));
+      player.left = true;
       break;
     case 39: // right
-      player.setAngularVelocity(new THREE.Vector3(0,-10,0));
+      player.right = true;
       break;
     case 32: // Spacebar to flip player back over
       player.lookAt(player.getWorldRotation());
@@ -194,4 +218,25 @@ document.addEventListener('keydown', function( ev ) {
       var x=new THREE.Vector3(50,0,0);
       player.setAngularVelocity(x);
   }
+
+});
+
+document.addEventListener('keyup', function( ev ) {
+    //console.log(ev.keyCode); //get keycode in console
+  switch ( ev.keyCode ) {
+    case 38: // forward
+      player.forward = false;
+      break;
+    case 40: // back
+      player.back = false;
+      break;
+    case 37: // left
+      player.left = false;
+      break;
+    case 39: // right
+      player.right = false;
+      break;
+
+  }
+
 });
