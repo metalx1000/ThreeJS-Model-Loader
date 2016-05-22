@@ -5,7 +5,10 @@ Physijs.scripts.ammo = 'ammo.js';
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var initScene, render, createShape, player,
-  renderer, scene, light, ground, ground_material, camera, dae;
+  renderer, scene, light, ground, ground_material,
+  camera, dae, mouseX, mouseY;
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
 var monkies = [];
 
 initScene = function() {
@@ -195,9 +198,21 @@ function move(){
   if(player.right){
     player.setAngularVelocity(new THREE.Vector3(0,-5,0));
   }
+
+  
 }
 
 window.onload = initScene;
+
+//mouse controls
+document.addEventListener( 'mousedown', function(ev){player.forward = true;});
+document.addEventListener( 'mouseup', function(ev){player.forward = false;});
+document.addEventListener( 'mousemove', function(ev){
+  mouseX = ( event.clientX - windowHalfX ) / 20;
+  mouseY = ( event.clientY - windowHalfY ) / 2;
+  player.setAngularVelocity(new THREE.Vector3(0,mouseX,0));
+});
+
 document.addEventListener('keydown', function( ev ) {
     //console.log(ev.keyCode); //get keycode in console
   switch ( ev.keyCode ) {

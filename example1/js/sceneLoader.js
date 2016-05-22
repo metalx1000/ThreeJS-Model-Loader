@@ -106,3 +106,27 @@ function fullscreen(){
 
   element.requestFullscreen();
 }
+
+function intersect(obj1,obj2,dis){
+  var raycaster = new THREE.Raycaster();
+  var rays = [
+    new THREE.Vector3(0, 0, 1),
+    new THREE.Vector3(1, 0, 1),
+    new THREE.Vector3(1, 0, 0),
+    new THREE.Vector3(1, 0, -1),
+    new THREE.Vector3(0, 0, -1),
+    new THREE.Vector3(-1, 0, -1),
+    new THREE.Vector3(-1, 0, 0),
+    new THREE.Vector3(-1, 0, 1)
+  ];
+
+  rays.forEach(function(vec){
+    //raycaster.ray.direction.set(vec);
+    //raycaster.ray.origin.copy( obj1.position );
+    raycaster.ray.set(obj1.position,vec);
+    var hit = raycaster.intersectObject(obj2);
+    if(hit.length > 0 && hit[0].distance < dis){
+      console.log(hit[0].distance);
+    }
+  });
+}
