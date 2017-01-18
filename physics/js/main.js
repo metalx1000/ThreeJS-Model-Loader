@@ -59,68 +59,6 @@ initScene = function() {
   light.shadowDarkness = .7;
   scene.add(light);
 
-  // Materials
-  ground_material = Physijs.createMaterial(
-    new THREE.MeshLambertMaterial({
-      map: THREE.ImageUtils.loadTexture('images/rocks.jpg')
-    }),
-    .8, // high friction
-    .4 // low restitution
-  );
-  ground_material.map.wrapS = ground_material.map.wrapT = THREE.RepeatWrapping;
-  ground_material.map.repeat.set(2.5, 2.5);
-
-  // Ground
-  ground = new Physijs.BoxMesh(
-    new THREE.CubeGeometry(50, 1, 50),
-    //new THREE.PlaneGeometry(50, 50),
-    ground_material,
-    0 // mass
-  );
-  ground.receiveShadow = true;
-  scene.add(ground);
-
-  // Bumpers
-  var bumper,
-    bumper_geom = new THREE.CubeGeometry(2, 1, 50);
-
-  bumper = new Physijs.BoxMesh(bumper_geom, ground_material, 0, {
-    restitution: .2
-  });
-  bumper.position.y = 1;
-  bumper.position.x = -24;
-  bumper.receiveShadow = true;
-  bumper.castShadow = true;
-  scene.add(bumper);
-
-  bumper = new Physijs.BoxMesh(bumper_geom, ground_material, 0, {
-    restitution: .2
-  });
-  bumper.position.y = 1;
-  bumper.position.x = 24;
-  bumper.receiveShadow = true;
-  bumper.castShadow = true;
-  scene.add(bumper);
-
-  bumper = new Physijs.BoxMesh(bumper_geom, ground_material, 0, {
-    restitution: .2
-  });
-  bumper.position.y = 1;
-  bumper.position.z = -24;
-  bumper.rotation.y = Math.PI / 2;
-  bumper.receiveShadow = true;
-  bumper.castShadow = true;
-  scene.add(bumper);
-
-  bumper = new Physijs.BoxMesh(bumper_geom, ground_material, 0, {
-    restitution: .2
-  });
-  bumper.position.y = 1;
-  bumper.position.z = 24;
-  bumper.rotation.y = Math.PI / 2;
-  bumper.receiveShadow = true;
-  bumper.castShadow = true;
-  scene.add(bumper);
 
   scene.simulate();
 
@@ -145,20 +83,23 @@ initScene = function() {
         player.left = false;
         player.right = false;
         scene.add(player);
-      }else if(mesh.type == "Mesh" && obj.name == "Plane"){
+      }else if(mesh.type == "Mesh" && obj.name == "Ground"){
         console.log("Plane Found");
-        var item = new Physijs.ConcaveMesh(mesh.geometry, mesh.material,0);
+        var item = new Physijs.BoxMesh(mesh.geometry, mesh.material,0);
         item.position.copy(obj.position);
         item.castShadow = true;
         scene.add(item);
-        monkies.push(item);
       }else if (mesh.type == "Mesh") {
         var item = new Physijs.ConvexMesh(mesh.geometry, mesh.material);
         item.position.copy(obj.position);
         item.castShadow = true;
         scene.add(item);
         monkies.push(item);
-      }       //scene.add( dae );
+      }else{
+        scene.add(mesh);
+      }
+
+      //scene.add( dae );
     });
   });
 
