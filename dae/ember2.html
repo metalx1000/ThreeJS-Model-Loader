@@ -20,8 +20,13 @@
     <script src="js/ColladaLoader.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/Detector.js"></script>
+    <script src="js/physi.js"></script>
 
     <script>
+      'use strict';
+
+      Physijs.scripts.worker = 'js/physijs_worker.js';
+      Physijs.scripts.ammo = 'ammo.js';
 
       if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
@@ -46,7 +51,13 @@
         camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 2000 );
         camera.position.set( 2, 2, 3 );
 
-        scene = new THREE.Scene();
+        scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
+        scene.addEventListener(
+          'update',
+          function() {
+            scene.simulate(undefined, 2);
+          }
+        ); 
 
         // Add the COLLADA
 

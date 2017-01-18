@@ -39,7 +39,7 @@ initScene = function() {
     1,
     1000
   );
-  camera.position.set(60, 50, 60);
+  camera.position.set(20, 20, 20);
   camera.lookAt(scene.position);
   scene.add(camera);
   //var controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -139,7 +139,7 @@ initScene = function() {
         player.velocity = new THREE.Vector3();
         player.setLinearVelocity(player.velocity);
         player.castShadow = true;
-        player.speed = 10;
+        player.speed = 30;
         player.forward = false;
         player.back = false;
         player.left = false;
@@ -169,6 +169,7 @@ initScene = function() {
 render = function() {
   requestAnimationFrame(render);
   scene.simulate();
+  camera.lookAt(player.position);
   renderer.render(scene, camera);
   move();
 };
@@ -185,8 +186,8 @@ function move(){
 
   if(player.back){
     var v = player.getWorldDirection();
-    v.x *= -player.speed;
-    v.z *= -player.speed;
+    v.x *= -player.speed/3;
+    v.z *= -player.speed/3;
     v.y = player.getLinearVelocity().y; //keeps gravity working
     player.setLinearVelocity(v);
   }
@@ -208,7 +209,7 @@ window.onload = initScene;
 document.addEventListener( 'mousedown', function(ev){player.forward = true;});
 document.addEventListener( 'mouseup', function(ev){player.forward = false;});
 document.addEventListener( 'mousemove', function(ev){
-  mouseX = ( event.clientX - windowHalfX ) / 20;
+  mouseX = ( event.clientX - windowHalfX ) / 50;
   mouseY = ( event.clientY - windowHalfY ) / 2;
   player.setAngularVelocity(new THREE.Vector3(0,mouseX,0));
 });
